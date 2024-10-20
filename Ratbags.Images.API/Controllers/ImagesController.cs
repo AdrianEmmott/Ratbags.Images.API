@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Ratbags.Images.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/images")]
     public class ImagesController : ControllerBase
     {
         
@@ -16,8 +17,12 @@ namespace Ratbags.Images.API.Controllers
         }
 
         [HttpGet("{filename}")]
+        [SwaggerOperation(Summary = "Gets an image",
+        Description = "Returns an image if it exists in wwwroot")]
         public IActionResult Get(string filename)
         {
+            // makes sure the images folder matches case of the actual folder
+            // as docker (linux) won't like discrepencies
             var filepath = Path.Combine("wwwroot", "images", filename);
 
             if (!System.IO.File.Exists(filepath)) 
